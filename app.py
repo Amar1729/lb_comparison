@@ -38,15 +38,23 @@ def main() -> None:
 
     st.divider()
 
-    # data = load_data()
     data = load_full_data()
-    filters = {
-        col: st.checkbox(f"{col}: if checked, this person is NOT here")
-        for col in data.columns[1:]
-    }
+
+    filters = {}
+    rewatches = {}
+
+    # TODO: format these on the page to be not ridiculous
+    for username in data.columns[1:6]:
+        filters[username] = st.checkbox(f"{username}: if checked, this person is NOT here")
+        rewatches[username] = st.checkbox(f"→ {username}: (doesn't mind rewatches)")
 
     filtered_data = data.copy()
-    for u, f in filters.items():
+    for u in filters:
+        f = filters[u]
+        r = rewatches[u]
+        if r:
+            # this person doesn't mind rewatching, so ignore their watch status
+            continue
         if not f:
             filtered_data = filtered_data[filtered_data[u].isin(
                 {Emoji.unwatched.value, Emoji.watchlist.value},
