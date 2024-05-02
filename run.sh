@@ -17,7 +17,6 @@ fi
 
 for user in ${users[@]}; do
     scrapy crawl -a username="$user" watchlist
-    sleep 2
 
     scrapy crawl -a username="$user" films
     sleep 2

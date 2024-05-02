@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import scrapy
+from scrapy.exceptions import CloseSpider
+
+from . import item_seen
 
 
 class WatchlistSpider(scrapy.Spider):
@@ -21,10 +24,16 @@ class WatchlistSpider(scrapy.Spider):
     def parse(self, response):
         for link in response.xpath('//li[@class="poster-container"]/div'):
             link_url = link.attrib["data-target-link"]
-            yield {
+            item = {
                 "username": self.username,
                 "film_slug": link_url.removeprefix("/film/").removesuffix("/"),
             }
+
+            if item_seen(item, "watchlist"):
+                msg = "watchlist item seen before"
+                raise CloseSpider(msg)
+
+            yield item
 
         next_page = response.css('a.next::attr("href")').get()
         if next_page is not None:
