@@ -28,6 +28,14 @@ def load_full_data() -> pd.DataFrame:
     for c in data.columns[1:]:
         data[c] = data[c].fillna("unwatched").map(lambda s: getattr(Emoji, s).value).astype("category")
 
+    data["count"] = data.apply(
+        lambda row: sum(
+            row[col] == Emoji.watchlist.value
+            for col in data.columns[1:]
+        ),
+        axis=1,
+    )
+
     # TODO: i think i want to scrape the actual name of the movie too ?
     data["slug"] = data["slug"].apply(
         lambda s: f"https://letterboxd.com/film/{s}/",
