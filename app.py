@@ -28,6 +28,11 @@ def load_full_data() -> pd.DataFrame:
     for c in data.columns[1:]:
         data[c] = data[c].fillna("unwatched").map(lambda s: getattr(Emoji, s).value).astype("category")
 
+    # TODO: i think i want to scrape the actual name of the movie too ?
+    data["slug"] = data["slug"].apply(
+        lambda s: f"https://letterboxd.com/film/{s}/",
+    )
+
     return data
 
 
@@ -66,6 +71,11 @@ def main() -> None:
     st.dataframe(
         filtered_data,
         hide_index=True,
+        column_config={
+            "slug": st.column_config.LinkColumn(
+                "Links", display_text=r"https://letterboxd\.com/film/(.*)/",
+            ),
+        },
     )
 
 
