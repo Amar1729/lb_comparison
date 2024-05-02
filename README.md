@@ -57,3 +57,11 @@ sqlite3 ./movies.sqlite < ./queries/multiple_watchlist.sql
 
 sqlite3 ./movies.sqlite < ./queries/watchlist_no_watched.sql
 ```
+
+## server
+
+To run the server to compare data with a more user-friendly interface, a [streamlit](https://streamlit.io/) app is provided:
+
+```bash
+streamlit run app.py
+```
