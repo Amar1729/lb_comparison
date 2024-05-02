@@ -47,3 +47,13 @@ EOF
 
 ./run.sh
 ```
+
+## data
+
+Once data is scraped, you can use the included SQL queries to see insights:
+
+```bash
+sqlite3 ./movies.sqlite < ./queries/multiple_watchlist.sql
+
+sqlite3 ./movies.sqlite < ./queries/watchlist_no_watched.sql
+```
