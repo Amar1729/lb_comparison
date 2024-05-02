@@ -7,7 +7,7 @@ class FilmsSpider(scrapy.Spider):
     name = "films"
     custom_settings = {
         "ITEM_PIPELINES": {
-            "letterboxd_watchlist_comparison_scrapy.pipelines.FilmsPipeline": 300,
+            "lb_scrapers.pipelines.FilmsPipeline": 300,
         },
     }
 

@@ -1,4 +1,4 @@
-# Scrapy settings for letterboxd_watchlist_comparison_scrapy project
+# Scrapy settings for lb_scrapers project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "letterboxd_watchlist_comparison_scrapy"
+BOT_NAME = "lb_scrapers"
 
-SPIDER_MODULES = ["letterboxd_watchlist_comparison_scrapy.spiders"]
-NEWSPIDER_MODULE = "letterboxd_watchlist_comparison_scrapy.spiders"
+SPIDER_MODULES = ["lb_scrapers.spiders"]
+NEWSPIDER_MODULE = "lb_scrapers.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "letterboxd_watchlist_comparison_scrapy (+http://susurrus.page)"
+USER_AGENT = "lb_scrapers (+http://susurrus.page)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -45,13 +45,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "letterboxd_watchlist_comparison_scrapy.middlewares.LetterboxdWatchlistComparisonScrapySpiderMiddleware": 543,
+#    "lb_scrapers.middlewares.WatchlistSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "letterboxd_watchlist_comparison_scrapy.middlewares.LetterboxdWatchlistComparisonScrapyDownloaderMiddleware": 543,
+#    "lb_scrapers.middlewares.WatchlistDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -64,7 +64,7 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # Defined for each specific spider.
 # ITEM_PIPELINES = {
-#     "letterboxd_watchlist_comparison_scrapy.pipelines.LetterboxdWatchlistComparisonScrapyPipeline": 300,
+#     "lb_scrapers.pipelines.WatchlistPipeline": 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

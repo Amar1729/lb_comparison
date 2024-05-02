@@ -1,7 +1,7 @@
 from scrapy.item import Item, Field
 
 
-class LetterboxdWatchlistComparisonScrapyItem(Item):
+class WatchlistItem(Item):
     """Item returned by watchlist spider."""
 
     username = Field()

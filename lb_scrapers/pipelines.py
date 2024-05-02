@@ -84,7 +84,7 @@ def insert_item(cur: sqlite3.Cursor, item: ItemType) -> tuple[int, int]:
     return user_id, movie_id
 
 
-class LetterboxdWatchlistComparisonScrapyPipeline:
+class WatchlistPipeline:
     def __init__(self, *args, **kwargs) -> None:
         # TODO: connection URL should probably be in settings.py
         self.pth = Path(__file__).absolute().parent.parent / "movies.sqlite"
