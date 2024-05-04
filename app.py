@@ -40,9 +40,18 @@ def load_full_data() -> pd.DataFrame:
         axis=1,
     )
 
-    # TODO: i want the "title" column to be styled as the url, but can't just do it with LinkColumn
+    # absolutely disgusting construction:
+    # streamlit's column_config.LinkColumn can not currently take a URL and use a different
+    # column value as the text, the text has to be static or parsed from the URL.
+    # You can also use pandas' Styler.format, but streamlit docs note that may be removed
+    # in the future(?). So, the only safe way seems to be to construct a URL with a parameter
+    # that LB doesn't care about, then parse that from the URL to get our title during page load.
     data["slug"] = data["slug"].apply(
         lambda s: f"https://letterboxd.com/film/{s}/",
+    )
+    data["title"] = data.apply(
+        lambda row: f"{row.slug}?fake={row.title}",
+        axis=1,
     )
 
     return data
@@ -84,8 +93,10 @@ def main() -> None:
         filtered_data,
         hide_index=True,
         column_config={
-            "slug": st.column_config.LinkColumn(
-                "Links", display_text=r"https://letterboxd\.com/film/(.*)/",
+            "year": st.column_config.NumberColumn("year", format="%d"),
+            "slug": None,
+            "title": st.column_config.LinkColumn(
+                "Title", display_text=r"https://letterboxd\.com/film/.*/?fake=(.*)",
             ),
         },
     )
