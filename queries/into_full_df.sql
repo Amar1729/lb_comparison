@@ -4,6 +4,18 @@ SELECT
         WHEN watchlist.slug IS NOT NULL THEN watchlist.slug
     END slug,
     CASE
+        WHEN finished.title IS NOT NULL THEN finished.title
+        WHEN watchlist.title IS NOT NULL THEN watchlist.title
+    END title,
+    CASE
+        WHEN finished.rating IS NOT NULL THEN finished.rating
+        WHEN watchlist.rating IS NOT NULL THEN watchlist.rating
+    END rating,
+    CASE
+        WHEN finished.year IS NOT NULL THEN finished.year
+        WHEN watchlist.year IS NOT NULL THEN watchlist.year
+    END year,
+    CASE
         WHEN watchlist.amar1729 = True THEN 'watchlist'
         WHEN finished.amar1729 = True THEN 'watched'
     END amar1729,
@@ -27,6 +39,9 @@ FROM
 (
     SELECT
       slug,
+      title,
+      rating,
+      year,
       SUM(CASE WHEN name = 'amar1729' THEN True END) amar1729,
       SUM(CASE WHEN name = 'nicole_kaff' THEN True END) nicole_kaff,
       SUM(CASE WHEN name = 'urbacha' THEN True END) urbacha,
@@ -35,7 +50,7 @@ FROM
     FROM
     (
       SELECT
-        slug, name
+        slug, name, title, rating, year
       FROM movies
       JOIN join_watchlist
         ON join_watchlist.movie_id = movies.id
@@ -48,6 +63,9 @@ FULL OUTER JOIN
 (
     SELECT
       slug,
+      title,
+      rating,
+      year,
       SUM(CASE WHEN name = 'amar1729' THEN True END) amar1729,
       SUM(CASE WHEN name = 'nicole_kaff' THEN True END) nicole_kaff,
       SUM(CASE WHEN name = 'urbacha' THEN True END) urbacha,
@@ -56,7 +74,7 @@ FULL OUTER JOIN
     FROM
     (
       SELECT
-        slug, name
+        slug, name, title, rating, year
       FROM movies
       JOIN join_finished
         ON join_finished.movie_id = movies.id

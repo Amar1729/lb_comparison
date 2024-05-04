@@ -9,6 +9,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+USER_COL_START = 4
+
 
 class Emoji(Enum):
     watched = "✅"
@@ -25,18 +27,20 @@ def load_full_data() -> pd.DataFrame:
 
     data = pd.read_sql_query(sql_query, con)
 
-    for c in data.columns[1:]:
+    # TODO: i should figure out if i can make this a multi-index or something
+    # figuring out column offsets for only username columns is annoying
+    for c in data.columns[USER_COL_START:]:
         data[c] = data[c].fillna("unwatched").map(lambda s: getattr(Emoji, s).value).astype("category")
 
     data["count"] = data.apply(
         lambda row: sum(
             row[col] == Emoji.watchlist.value
-            for col in data.columns[1:]
+            for col in data.columns[USER_COL_START:]
         ),
         axis=1,
     )
 
-    # TODO: i think i want to scrape the actual name of the movie too ?
+    # TODO: i want the "title" column to be styled as the url, but can't just do it with LinkColumn
     data["slug"] = data["slug"].apply(
         lambda s: f"https://letterboxd.com/film/{s}/",
     )
@@ -57,7 +61,7 @@ def main() -> None:
     rewatches = {}
 
     # TODO: format these on the page to be not ridiculous
-    for username in data.columns[1:6]:
+    for username in data.columns[USER_COL_START:USER_COL_START+5]:
         filters[username] = st.checkbox(f"{username}: if checked, this person is NOT here")
         rewatches[username] = st.checkbox(f"→ {username}: (doesn't mind rewatches)")
 
