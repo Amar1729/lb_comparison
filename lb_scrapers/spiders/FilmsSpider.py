@@ -19,7 +19,13 @@ class FilmsSpider(scrapy.Spider):
         if username is None:
             raise ValueError("username must be set.")
         self.username = username
-        self.start_urls = [f"https://letterboxd.com/{username}/films"]
+
+        # LB sorts username/films by release date, so we technically have to scrape everything...
+        # self.start_urls = [f"https://letterboxd.com/{username}/films"]
+        # also uses robots.txt to prevent scraping of username/films/by/date, so we can't do that
+        # (unless we say not to obey robots.txt)
+        # (sort by "when added > newest first")
+        self.start_urls = [f"https://letterboxd.com/{username}/films/by/date/"]
 
     def parse(self, response):
         # this seems like it might be a very intensive parse
@@ -40,10 +46,7 @@ class FilmsSpider(scrapy.Spider):
 
             yield item
 
-        # TODO: this checking actually won't work if someone backdates film watches...
-        # (provide a --full flag or something similar?)
-        # stop the spider if we've seen anything on this page so far.
-        # (links come in in a weird order)
+        # This will only work for /by/date, see comment for start_urls.
         if any_item_seen:
             msg = "film item seen before"
             raise CloseSpider(msg)
