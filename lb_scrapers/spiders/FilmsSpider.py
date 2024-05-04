@@ -26,6 +26,8 @@ class FilmsSpider(scrapy.Spider):
         # make sure to not re-run this too many times?
         # (alternatively, should i just scrape film watch status from each film on shared watchlist?)
 
+        any_item_seen = False
+
         for link in response.xpath('//li[@class="poster-container"]/div'):
             link_url = link.attrib["data-target-link"]
             item = {
@@ -34,10 +36,17 @@ class FilmsSpider(scrapy.Spider):
             }
 
             if item_seen(item, "finished"):
-                msg = "film item seen before"
-                raise CloseSpider(msg)
+                any_item_seen = True
 
             yield item
+
+        # TODO: this checking actually won't work if someone backdates film watches...
+        # (provide a --full flag or something similar?)
+        # stop the spider if we've seen anything on this page so far.
+        # (links come in in a weird order)
+        if any_item_seen:
+            msg = "film item seen before"
+            raise CloseSpider(msg)
 
         next_page = response.css('a.next::attr("href")').get()
         if next_page is not None:

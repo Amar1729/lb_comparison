@@ -22,6 +22,8 @@ class WatchlistSpider(scrapy.Spider):
         self.start_urls = [f"https://letterboxd.com/{username}/watchlist"]
 
     def parse(self, response):
+        any_item_seen = False
+
         for link in response.xpath('//li[@class="poster-container"]/div'):
             link_url = link.attrib["data-target-link"]
             item = {
@@ -30,10 +32,13 @@ class WatchlistSpider(scrapy.Spider):
             }
 
             if item_seen(item, "watchlist"):
-                msg = "watchlist item seen before"
-                raise CloseSpider(msg)
+                any_item_seen = True
 
             yield item
+
+        if any_item_seen:
+            msg = "watchlist item seen before"
+            raise CloseSpider(msg)
 
         next_page = response.css('a.next::attr("href")').get()
         if next_page is not None:
