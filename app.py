@@ -66,18 +66,28 @@ def main() -> None:
 
     data = load_full_data()
 
-    filters = {}
-    rewatches = {}
+    st.write('Select the "mia" box for friends who are missing :cry:')
+    st.write('Select the "rewatches" button for those who are present, but don\'t mind rewatches.')
 
-    # TODO: format these on the page to be not ridiculous
-    for username in data.columns[USER_COL_START:USER_COL_START+5]:
-        filters[username] = st.checkbox(f"{username}: if checked, this person is NOT here")
-        rewatches[username] = st.checkbox(f"→ {username}: (doesn't mind rewatches)")
+    usernames = data.columns[USER_COL_START:USER_COL_START+5]
+
+    selection_df = st.data_editor(
+        pd.DataFrame(
+            {
+                "mia": [False for _ in usernames],
+                "rewatches": [False for _ in usernames],
+            },
+            index=data.columns[USER_COL_START:USER_COL_START+5],
+        ),
+        column_config={
+            "_index": st.column_config.TextColumn(disabled=True),
+        },
+    )
 
     filtered_data = data.copy()
-    for u in filters:
-        f = filters[u]
-        r = rewatches[u]
+    for u in usernames:
+        f = selection_df.loc[u, "mia"]
+        r = selection_df.loc[u, "rewatches"]
         if r:
             # this person doesn't mind rewatching, so ignore their watch status
             continue
@@ -95,6 +105,7 @@ def main() -> None:
         column_config={
             "year": st.column_config.NumberColumn("year", format="%d"),
             "slug": None,
+            "rating": st.column_config.NumberColumn(format="%.2f"),
             "title": st.column_config.LinkColumn(
                 "Title", display_text=r"https://letterboxd\.com/film/.*/?fake=(.*)",
             ),
